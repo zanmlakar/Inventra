@@ -1,11 +1,9 @@
-import React, { Component } from 'react'
-import { Text, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-export default function index() {
+import { View, Text } from "react-native";
+
+export default function Home() {
   return (
     <View>
-      <Text> index </Text>
+      <Text>Home Screen</Text>
     </View>
-  )
-
+  );
 }

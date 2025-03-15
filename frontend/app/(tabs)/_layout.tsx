@@ -3,7 +3,7 @@ import { View, StyleSheet, Pressable, StatusBar } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { styles } from '@/app/(tabs)/layout';
 
-export default function TabLayout() {
+export default function layout() {
     return (
         <>
             <StatusBar
@@ -111,7 +111,6 @@ export default function TabLayout() {
                         ),
                     }}
                 />
-
             </Tabs>
         </>
     );
