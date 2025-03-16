@@ -13,7 +13,6 @@ import {
     Image,
 } from 'react-native';
 import { router } from 'expo-router';
-import Inventra_logo from '@/assets/images/Inventra_logo.png';
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -36,7 +35,7 @@ export default function Login() {
             style={styles.container}
         >
             <View style={styles.logoContainer}>
-                        <Image source={Inventra_logo} style={styles.logo} />
+                        <Image source={require('../../assets/images/Inventra_logo.png')} style={styles.logo} />
                     </View>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={styles.inner}>
