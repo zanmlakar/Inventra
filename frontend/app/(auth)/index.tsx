@@ -27,7 +27,7 @@ export default function Index() {
         <Image style={styles.landingPageImage} source={require('../../assets/images/landingPagePicture.png')} width={100} height={100}></Image>
         <View style={styles.buttonContainer}>
           <TouchableOpacity onPress={()=>router.replace('/(auth)/login')} style={styles.button}>
-            <Text style={styles.buttonText}>LOG IN</Text>
+            <Link href={"/(auth)/login"} style={styles.buttonText}>LOG IN</Link>
           </TouchableOpacity>
           <TouchableOpacity onPress={()=>router.replace('/(auth)/register')} style={[styles.button, styles.registerButton]}>
             <Link href={"/(auth)/register"} style={[styles.buttonText,{color:'#670000'}]}>REGISTER</Link>
