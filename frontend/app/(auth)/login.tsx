@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
     View,
     Text,
@@ -10,23 +10,46 @@ import {
     TouchableWithoutFeedback,
     Keyboard,
     StatusBar,
-    Image,
 } from 'react-native';
 import { router } from 'expo-router';
+import { isClerkAPIResponseError, useSignIn } from '@clerk/clerk-expo'; // Import Clerk's useSignIn hook
 import GoogleSignInButton from '@/components/auth/GoogleSignInButton';
 import GitHubSignInButton from '@/components/auth/GithubSignInButton';
+import { ClerkAPIError, ClerkAPIErrorJSON } from '@clerk/types';
+import { Toast } from 'toastify-react-native';
 
 export default function Login() {
+    const { signIn, setActive, isLoaded } = useSignIn();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-    const handleLogin = () => {
-        // Implement your login logic here
-        console.log('Login with:', email, password);
-        // On successful login:
-        // router.replace('/(tabs)');
-    };
+    const onSignInPress = useCallback(async () => {
+        if (!isLoaded) return;
+
+        try {
+            if (!email || !password) {
+                return Toast.error("Fill required fields!");
+            }
+            const signInAttempt = await signIn.create({
+                identifier: email,
+                password,
+            });
+            if (signInAttempt.status === 'complete') {
+                await setActive({ session: signInAttempt.createdSessionId });
+                router.replace('/(tabs)');
+            } else {
+                console.error(JSON.stringify(signInAttempt, null, 2));
+            }
+        } catch (err) {
+            if(err.clerkError){
+                return Toast.error(err.errors[0].message)
+            }
+            console.error(JSON.stringify(err, null, 2));
+            Toast.error("There was an issue");
+
+        }
+    }, [isLoaded, email, password]);
 
     const navigateToRegister = () => {
         router.push('/(auth)/register');
@@ -40,8 +63,6 @@ export default function Login() {
             <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={styles.inner}>
-
-
                     <Text style={styles.title}>Welcome Back</Text>
                     <Text style={styles.subtitle}>Sign in to continue</Text>
 
@@ -84,9 +105,7 @@ export default function Login() {
                         <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
                     </TouchableOpacity>
 
-
-
-                    <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+                    <TouchableOpacity style={styles.loginButton} onPress={onSignInPress}>
                         <Text style={styles.loginButtonText}>Login</Text>
                     </TouchableOpacity>
 
@@ -96,12 +115,11 @@ export default function Login() {
                             <Text style={styles.signupLink}>Sign Up</Text>
                         </TouchableOpacity>
                     </View>
-                    {/* Separator */}
 
                     <View style={{ position: 'relative', marginVertical: 20 }}>
-                        <View style={{ height: 1, backgroundColor: '#670000', width: '100%', }}></View>
-                        <View style={{ position: 'absolute', bottom: -10,alignItems:'center', width: 50, backgroundColor: 'white', zIndex: 10,alignSelf:'center' }}>
-                            <Text style={{ color: '#670000'}}>OR</Text>
+                        <View style={{ height: 1, backgroundColor: '#670000', width: '100%' }}></View>
+                        <View style={{ position: 'absolute', bottom: -10, alignItems: 'center', width: 50, backgroundColor: 'white', zIndex: 10, alignSelf: 'center' }}>
+                            <Text style={{ color: '#670000' }}>OR</Text>
                         </View>
                     </View>
 
@@ -124,16 +142,6 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 24,
         justifyContent: 'center',
-    },
-    logoContainer: {
-        width: "100%",
-        alignItems: "flex-start",
-        marginBottom: 30,
-        padding: 20,
-    },
-    logo: {
-        width: 80,
-        height: 80,
     },
     title: {
         fontSize: 32,

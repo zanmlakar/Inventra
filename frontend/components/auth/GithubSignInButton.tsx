@@ -1,8 +1,7 @@
+import { useRouter } from 'expo-router';
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-import { useRouter } from 'expo-router';
-import { authClient } from '@/util/auth-client';
 
 export default function GitHubSignInButton() {
 
@@ -10,13 +9,9 @@ export default function GitHubSignInButton() {
 
     async function githubSignIn() {
         try {
-            const { data, error } = await authClient.signIn.social({
-                provider: 'github',
-            })
-            router.replace('/(tabs)');
-            console.log(data);
+           
         } catch (error) {
-            console.log()
+            console.log(error);
         }
     }
 

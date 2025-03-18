@@ -1,7 +1,21 @@
-import { Stack } from "expo-router";
 import { StatusBar } from "react-native";
-
+import { Redirect, Stack } from 'expo-router'
+import { useAuth, useClerk } from '@clerk/clerk-expo'
+import { useEffect } from "react";
 export default function AuthLayout() {
+
+    const { isSignedIn } = useAuth();
+
+    const { loaded } = useClerk();
+    
+    useEffect(() => {
+        console.log('Clerk loaded:', loaded);
+    }, [loaded]);
+
+    if (isSignedIn) {
+        return <Redirect href={'/(tabs)'} />
+    }
+
     return (
         <>
             <StatusBar

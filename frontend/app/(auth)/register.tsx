@@ -10,29 +10,105 @@ import {
     TouchableWithoutFeedback,
     Keyboard,
     StatusBar,
-    Image,
     ScrollView,
 } from 'react-native';
 import { router } from 'expo-router';
+import { useSignUp } from '@clerk/clerk-expo';
+import { Toast } from 'toastify-react-native';
 
 export default function Register() {
-    const [fullName, setFullName] = useState('');
+    const { isLoaded, signUp, setActive } = useSignUp();
+    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
+    const [pendingVerification, setPendingVerification] = useState(false);
+    const [code, setCode] = useState('');
 
-    const handleRegister = () => {
-        // Implement your registration logic here
-        console.log('Register with:', fullName, email, password);
-        // On successful registration:
-        // router.replace('/(tabs)');
+    const handleRegister = async () => {
+        if (!isLoaded) return;
+
+        if (password !== confirmPassword) {
+            alert("Passwords do not match");
+            return;
+        }
+
+        try {
+            await signUp.create({
+                username,
+                emailAddress: email,
+                password,
+            });
+
+            await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
+            setPendingVerification(true);
+        } catch (err) {
+            if (err.clerkError) {
+                return Toast.error(err.errors[0].message)
+            }
+            console.error(JSON.stringify(err, null, 2));
+            alert("Registration failed. Please check your details and try again.");
+        }
+    };
+
+    const onVerifyPress = async () => {
+        if (!isLoaded) return;
+        try {
+            const signUpAttempt = await signUp.attemptEmailAddressVerification({
+                code,
+            });
+            console.log('sign up attempt', signUpAttempt.status);
+            if (signUpAttempt.status === 'complete') {
+                await setActive({ session: signUpAttempt.createdSessionId });
+                router.replace('/(tabs)/inventory');
+            } else {
+                console.error(JSON.stringify(signUpAttempt, null, 2));
+            }
+        } catch (err) {
+            console.log('sign up attempt failed');
+            console.error(JSON.stringify(err, null, 2));
+            alert("Verification failed. Please try again.");
+        }
     };
 
     const navigateToLogin = () => {
         router.push('/(auth)/login');
     };
+
+    if (pendingVerification) {
+        return (
+            <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                style={styles.container}
+            >
+                <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
+                <ScrollView contentContainerStyle={styles.scrollContainer}>
+                    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                        <View style={styles.inner}>
+                            <Text style={styles.title}>Verify Email</Text>
+                            <Text style={styles.subtitle}>Enter the verification code sent to your email</Text>
+                            <View style={styles.inputContainer}>
+                                <Text style={styles.label}>Verification Code</Text>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="Enter code"
+                                    placeholderTextColor="#999"
+                                    value={code}
+                                    onChangeText={setCode}
+                                />
+                            </View>
+
+                            <TouchableOpacity style={styles.registerButton} onPress={onVerifyPress}>
+                                <Text style={styles.registerButtonText}>Verify</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </TouchableWithoutFeedback>
+                </ScrollView>
+            </KeyboardAvoidingView>
+        );
+    }
 
     return (
         <KeyboardAvoidingView
@@ -45,19 +121,19 @@ export default function Register() {
                     <View style={styles.inner}>
                         <Text style={styles.title}>Create Account</Text>
                         <Text style={styles.subtitle}>Sign up to get started</Text>
-                        
+
                         <View style={styles.inputContainer}>
-                            <Text style={styles.label}>Full Name</Text>
+                            <Text style={styles.label}>Username</Text>
                             <TextInput
                                 style={styles.input}
                                 placeholder="Your Name"
                                 placeholderTextColor="#999"
                                 autoCapitalize="words"
-                                value={fullName}
-                                onChangeText={setFullName}
+                                value={username}
+                                onChangeText={setUsername}
                             />
                         </View>
-                        
+
                         <View style={styles.inputContainer}>
                             <Text style={styles.label}>Email</Text>
                             <TextInput
@@ -70,7 +146,7 @@ export default function Register() {
                                 onChangeText={setEmail}
                             />
                         </View>
-                        
+
                         <View style={styles.inputContainer}>
                             <Text style={styles.label}>Password</Text>
                             <View style={styles.passwordContainer}>
@@ -92,7 +168,7 @@ export default function Register() {
                                 </TouchableOpacity>
                             </View>
                         </View>
-                        
+
                         <View style={styles.inputContainer}>
                             <Text style={styles.label}>Confirm Password</Text>
                             <View style={styles.passwordContainer}>
@@ -152,16 +228,6 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 24,
         justifyContent: 'center',
-    },
-    logoContainer: {
-        width: "100%",
-        alignItems: "flex-start",
-        marginBottom: 20,
-        padding: 20,
-    },
-    logo: {
-        width: 80,
-        height: 80,
     },
     title: {
         fontSize: 32,
