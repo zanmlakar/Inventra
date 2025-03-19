@@ -17,13 +17,15 @@ import GoogleSignInButton from '@/components/auth/GoogleSignInButton';
 import GitHubSignInButton from '@/components/auth/GithubSignInButton';
 import { ClerkAPIError, ClerkAPIErrorJSON } from '@clerk/types';
 import { Toast } from 'toastify-react-native';
-
+import * as WebBrowser from 'expo-web-browser'
+import * as AuthSession from 'expo-auth-session'
 export default function Login() {
     const { signIn, setActive, isLoaded } = useSignIn();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
+      
     const onSignInPress = useCallback(async () => {
         if (!isLoaded) return;
 
@@ -42,7 +44,7 @@ export default function Login() {
                 console.error(JSON.stringify(signInAttempt, null, 2));
             }
         } catch (err) {
-            if(err.clerkError){
+            if (err.clerkError) {
                 return Toast.error(err.errors[0].message)
             }
             console.error(JSON.stringify(err, null, 2));
