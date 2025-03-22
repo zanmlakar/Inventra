@@ -5,6 +5,7 @@ import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { tokenCache } from "@/cache";
 import { useEffect } from "react";
 import ToastManager from "toastify-react-native";
+import { styles } from "./layout.styles";
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!
 
 export default function RootLayout() {
@@ -51,16 +52,3 @@ export default function RootLayout() {
     </ClerkProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loadingText: {
-    marginTop: 10,
-    fontSize: 16,
-    color: '#333',
-  },
-});

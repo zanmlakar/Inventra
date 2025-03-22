@@ -13,10 +13,12 @@ import {
     ScrollView,
 } from 'react-native';
 import { router } from 'expo-router';
-import { useSignUp } from '@clerk/clerk-expo';
+import { isClerkAPIResponseError, useSignUp } from '@clerk/clerk-expo';
 import { Toast } from 'toastify-react-native';
+import { styles } from './styles/register.styles';
 
 export default function Register() {
+
     const { isLoaded, signUp, setActive } = useSignUp();
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -44,9 +46,9 @@ export default function Register() {
 
             await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
             setPendingVerification(true);
-        } catch (err) {
-            if (err.clerkError) {
-                return Toast.error(err.errors[0].message)
+        } catch (err:unknown) {
+            if (isClerkAPIResponseError(err)) {
+                return Toast.error(err.errors[0].message);
             }
             console.error(JSON.stringify(err, null, 2));
             alert("Registration failed. Please check your details and try again.");
@@ -99,7 +101,6 @@ export default function Register() {
                                     onChangeText={setCode}
                                 />
                             </View>
-
                             <TouchableOpacity style={styles.registerButton} onPress={onVerifyPress}>
                                 <Text style={styles.registerButtonText}>Verify</Text>
                             </TouchableOpacity>
@@ -133,7 +134,7 @@ export default function Register() {
                                 onChangeText={setUsername}
                             />
                         </View>
-
+                        
                         <View style={styles.inputContainer}>
                             <Text style={styles.label}>Email</Text>
                             <TextInput
@@ -216,113 +217,3 @@ export default function Register() {
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#FFFFFF',
-    },
-    scrollContainer: {
-        flexGrow: 1,
-    },
-    inner: {
-        flex: 1,
-        padding: 24,
-        justifyContent: 'center',
-    },
-    title: {
-        fontSize: 32,
-        fontWeight: 'bold',
-        color: '#670000',
-        marginBottom: 8,
-    },
-    subtitle: {
-        fontSize: 16,
-        color: '#777',
-        marginBottom: 40,
-    },
-    inputContainer: {
-        marginBottom: 20,
-    },
-    label: {
-        fontSize: 14,
-        fontWeight: '500',
-        color: '#670000',
-        marginBottom: 8,
-    },
-    input: {
-        backgroundColor: '#F8F8F8',
-        height: 56,
-        borderRadius: 8,
-        paddingHorizontal: 16,
-        fontSize: 16,
-        color: '#333',
-        borderWidth: 1,
-        borderColor: '#E0E0E0',
-    },
-    passwordContainer: {
-        flexDirection: 'row',
-        backgroundColor: '#F8F8F8',
-        borderRadius: 8,
-        borderWidth: 1,
-        borderColor: '#E0E0E0',
-        height: 56,
-        alignItems: 'center',
-    },
-    passwordInput: {
-        flex: 1,
-        height: '100%',
-        paddingHorizontal: 16,
-        fontSize: 16,
-        color: '#333',
-    },
-    visibilityToggle: {
-        paddingHorizontal: 16,
-        height: '100%',
-        justifyContent: 'center',
-    },
-    visibilityText: {
-        color: '#670000',
-        fontSize: 14,
-        fontWeight: '500',
-    },
-    termsContainer: {
-        marginVertical: 20,
-    },
-    termsText: {
-        color: '#777',
-        fontSize: 14,
-        textAlign: 'center',
-        lineHeight: 20,
-    },
-    termsLink: {
-        color: '#670000',
-        fontWeight: '500',
-    },
-    registerButton: {
-        backgroundColor: '#670000',
-        height: 56,
-        borderRadius: 8,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 24,
-    },
-    registerButtonText: {
-        color: '#FFFFFF',
-        fontSize: 16,
-        fontWeight: '600',
-    },
-    loginContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        marginBottom: 20,
-    },
-    loginText: {
-        color: '#777',
-        fontSize: 14,
-    },
-    loginLink: {
-        color: '#670000',
-        fontSize: 14,
-        fontWeight: '500',
-    },
-});

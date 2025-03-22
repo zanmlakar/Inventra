@@ -1,7 +1,7 @@
 import { Tabs } from 'expo-router';
 import { View, StyleSheet, Pressable, StatusBar, Text } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { styles } from '@/app/(tabs)/layout.style';
+import { styles } from '@/app/(tabs)/styles/layout.style';
 import { SignedIn, useUser } from '@clerk/clerk-expo';
 
 export default function layout() {

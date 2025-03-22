@@ -7,10 +7,6 @@ export default function AuthLayout() {
     const { isSignedIn } = useAuth();
 
     const { loaded } = useClerk();
-    
-    useEffect(() => {
-        console.log('Clerk loaded:', loaded);
-    }, [loaded]);
 
     if (isSignedIn) {
         return <Redirect href={'/(tabs)'} />
