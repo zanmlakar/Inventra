@@ -3,7 +3,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ClerkProvider, ClerkLoaded, ClerkLoading, useClerk } from '@clerk/clerk-expo'
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { tokenCache } from "@/cache";
-import { useEffect } from "react";
 import ToastManager from "toastify-react-native";
 import { styles } from "./layout.styles";
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!
@@ -37,9 +36,9 @@ export default function RootLayout() {
           showProgressBar={false}
           showCloseIcon={false}
           textStyle={{
-            textAlign: 'center',       // Ensure the text inside is centered
+            textAlign: 'center',
             fontSize: 16,
-            fontWeight: 'bold',            // Customize text color if needed
+            fontWeight: 'bold',
           }}
           />
         <SafeAreaView style={{ flex: 1 }}>

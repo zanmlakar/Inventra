@@ -1,15 +1,13 @@
 import { Tabs } from 'expo-router';
-import { View, StyleSheet, Pressable, StatusBar, Text } from 'react-native';
+import { View, Pressable, StatusBar } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { styles } from '@/app/(tabs)/styles/layout.style';
-import { SignedIn, useUser } from '@clerk/clerk-expo';
+import { SignedIn } from '@clerk/clerk-expo';
 
 export default function layout() {
-    const { user } = useUser();
-    console.log(user);
+
     return (
         <SignedIn>
-            
             <StatusBar
                 translucent={true}
                 barStyle="dark-content"
@@ -84,7 +82,6 @@ export default function layout() {
                             </View>
                         ),
                         tabBarButton: (props) => {
-                            // Custom button just for this specific tab
                             return (
                                 <Pressable  {...props} android_ripple={null} style={[props.style, { backgroundColor: "transparent" }]}>
                                     {props.children}
