@@ -8,12 +8,12 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
     },
     addButton: {
+        backgroundColor:'#670000',
         justifyContent: 'center',
         alignItems: 'center',
         marginBottom: 25,
         width: 60,
         height: 60,
         borderRadius: 30,
-        backgroundColor: 'black',
     },
 });

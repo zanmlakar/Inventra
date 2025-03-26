@@ -20,7 +20,9 @@ import { Toast } from 'toastify-react-native';
 import * as WebBrowser from 'expo-web-browser'
 import * as AuthSession from 'expo-auth-session'
 import { styles } from './styles/login.styles';
+
 export default function Login() {
+
     const { signIn, setActive, isLoaded } = useSignIn();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -29,7 +31,6 @@ export default function Login() {
       
     const onSignInPress = useCallback(async () => {
         if (!isLoaded) return;
-
         try {
             if (!email || !password) {
                 return Toast.error("Fill required fields!");

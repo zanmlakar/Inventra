@@ -1,89 +1,91 @@
+import React, { useState, useEffect } from 'react';
+import { Text, View, StyleSheet, TouchableOpacity, Image, Switch } from 'react-native';
+import { useThemeStore } from '@/stores/store';
+import ThemeWrapper from '@/components/ui/ThemeWrapper';
+import { useUser } from '@clerk/clerk-expo';
 import LogOutButton from '@/components/profile/LogOutButton';
-import { useUser, useClerk } from '@clerk/clerk-expo';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, StatusBar, Image, Switch } from 'react-native';
-
 
 export default function Settings() {
-
     const { user } = useUser();
     const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(true);
-    const [isDarkMode, setIsDarkMode] = useState(false);
+    const { theme, setTheme,activeColors } = useThemeStore();
 
+    function setDarkMode() {
+        setTheme(!theme);
+    }
+
+    if(!activeColors) return null
     return (
-        <View style={styles.container}>
+        <ThemeWrapper>
+            <View style={[styles.container]}>
+                <LogOutButton />
 
-            <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
-
-            {/* log out modal*/}
-
-            <LogOutButton/>
-
-            <View style={styles.headerContainer}>
-                <Image source={{ uri: user?.imageUrl }} style={styles.profileImage} />
-                <Text style={styles.username}>{user?.username}</Text>
-                <Text style={styles.email}>{user?.primaryEmailAddress?.emailAddress}</Text>
-                <TouchableOpacity style={styles.editProfileButton}>
-                    <Text style={styles.editProfileText}>Edit profile</Text>
-                </TouchableOpacity>
-            </View>
-
-            <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Preferences</Text>
-                <View style={styles.settingItem}>
-                    <Text style={styles.settingText}>Push notifications</Text>
-                    <Switch
-                        value={isNotificationsEnabled}
-                        onValueChange={() => setIsNotificationsEnabled(!isNotificationsEnabled)}
-                    />
+                <View style={styles.headerContainer}>
+                    <Image source={{ uri: user?.imageUrl }} style={styles.profileImage} />
+                    <Text style={[styles.username, { color: activeColors.primaryText }]}>{user?.username}</Text>
+                    <Text style={[styles.email, { color: activeColors.secondaryText }]}>{user?.primaryEmailAddress?.emailAddress}</Text>
+                    <TouchableOpacity style={[styles.editProfileButton, { backgroundColor: activeColors.primary }]}>
+                        <Text style={styles.editProfileText}>Edit Profile</Text>
+                    </TouchableOpacity>
                 </View>
-                <View style={styles.settingItem}>
-                    <Text style={styles.settingText}>Dark Mode</Text>
-                    <Switch
-                        value={isDarkMode}
-                        onValueChange={() => setIsDarkMode(!isDarkMode)}
-                    />
+
+                <View style={[styles.section, { backgroundColor: activeColors.primaryBackground }]}>
+                    <Text style={[styles.sectionTitle, { color: activeColors.tertiaryText }]}>Preferences</Text>
+                    <View style={styles.settingItem}>
+                        <Text style={[styles.settingText, { color: activeColors.primaryText }]}>Push Notifications</Text>
+                        <Switch
+                            value={isNotificationsEnabled}
+                            onValueChange={() => setIsNotificationsEnabled(!isNotificationsEnabled)}
+                            thumbColor={isNotificationsEnabled ? activeColors.primary : activeColors.switchThumb}
+                            trackColor={{ false: activeColors.switchOff, true: activeColors.switchOn }}
+                            ios_backgroundColor={activeColors.switchOff}
+                            style={{ transform: [{ scaleX: 1.1 }, { scaleY: 1.1 }] }}
+                        />
+                    </View>
+                    <View style={styles.settingItem}>
+                        <Text style={[styles.settingText, { color: activeColors.primaryText }]}>Dark Mode</Text>
+                        <Switch
+                            value={theme}
+                            onValueChange={setDarkMode}
+                            thumbColor={theme ? activeColors.primary : activeColors.switchThumb}
+                            trackColor={{ false: activeColors.switchOff, true: activeColors.switchOn }}
+                            ios_backgroundColor={activeColors.switchOff}
+                            style={{ transform: [{ scaleX: 1.1 }, { scaleY: 1.1 }] }}
+                        />
+                    </View>
                 </View>
             </View>
-        </View>
+        </ThemeWrapper>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFFFFF',
         paddingHorizontal: 20,
-
-        paddingBottom: 40, // Adds space at the bottom
+        paddingBottom: 40,
     },
     headerContainer: {
         alignItems: 'center',
-        marginBottom: 40, // More space below profile
+        marginBottom: 40,
     },
     profileImage: {
         borderColor: '#670000',
-        borderWidth: 1,
-        width: 90, // Slightly larger image
+        borderWidth: 2,
+        width: 90,
         height: 90,
         borderRadius: 45,
         marginBottom: 15,
     },
     username: {
-        fontSize: 26, // Bigger text
+        fontSize: 26,
         fontWeight: 'bold',
-        color: '#670000',
-        marginBottom: 4,
     },
     email: {
         fontSize: 16,
-        color: '#666', // Slightly darker
         marginBottom: 15,
     },
     editProfileButton: {
-        backgroundColor: '#670000',
         paddingVertical: 10,
         paddingHorizontal: 25,
         borderRadius: 25,
@@ -94,14 +96,12 @@ const styles = StyleSheet.create({
         fontWeight: '500',
     },
     section: {
-        backgroundColor: '#F8F8F8',
         padding: 20,
         borderRadius: 12,
-        marginBottom: 30, // More space before logout button
+        marginBottom: 30,
     },
     sectionTitle: {
         fontSize: 15,
-        color: '#888',
         marginBottom: 12,
         fontWeight: '500',
     },
@@ -113,24 +113,15 @@ const styles = StyleSheet.create({
     },
     settingText: {
         fontSize: 17,
-        color: '#333',
     },
-    logoutButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderWidth: 2,
-        borderColor: '#670000',
-        borderRadius: 12,
-        paddingVertical: 14, // Slightly bigger button
-        paddingHorizontal: 30,
-        alignSelf: 'center', // Centers button
-        width: '80%', // Makes button wider
+    logOutButton: {
+        marginTop: 20,
+        alignSelf: 'flex-end',
+        padding: 10,
+        backgroundColor: '#670000',
+        borderRadius: 5,
     },
-    logoutText: {
-        color: '#670000',
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginLeft: 10,
+    logOutText: {
+        color: '#fff',
     },
 });

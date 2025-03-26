@@ -1,9 +1,10 @@
+import ThemeWrapper from "@/components/ui/ThemeWrapper";
 import { View, Text } from "react-native";
 
 export default function Home() {
   return (
-    <View>
+     <ThemeWrapper>
       <Text>Home Screen</Text>
-    </View>
+    </ThemeWrapper>
   );
 }

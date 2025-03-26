@@ -1,30 +1,29 @@
 import { Tabs } from 'expo-router';
-import { View, Pressable, StatusBar } from 'react-native';
+import { View, Pressable } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { styles } from '@/app/(tabs)/styles/layout.style';
 import { SignedIn } from '@clerk/clerk-expo';
+import { useThemeStore } from '@/stores/store';
+import { lightModeColors } from '@/assets/colors/colors';
 
 export default function layout() {
+    const { theme, activeColors } = useThemeStore();
+
+    const colors = activeColors || lightModeColors;
 
     return (
         <SignedIn>
-            <StatusBar
-                translucent={true}
-                barStyle="dark-content"
-                backgroundColor={"transparent"}
-            />
             <Tabs
                 screenOptions={{
-                    tabBarActiveTintColor: 'black',
+                    tabBarActiveTintColor: colors.primaryText,
                     tabBarShowLabel: false,
                     headerShown: false,
                     tabBarStyle: {
                         borderRadius: 20,
                         marginHorizontal: 8,
-                        marginBottom: 7,
-                        backgroundColor: 'white',
-                        borderTopWidth: 1,
-                        borderTopColor: '#e0e0e0',
+                        marginVertical: 7,
+                        borderTopWidth: 0, // Removed the top border
+                        backgroundColor: colors.secondaryBackground,
                     },
                     tabBarButton: (props) => {
                         return (
@@ -50,7 +49,6 @@ export default function layout() {
                     },
                 }}
             >
-
                 <Tabs.Screen
                     name="index"
                     options={{
@@ -83,7 +81,7 @@ export default function layout() {
                         ),
                         tabBarButton: (props) => {
                             return (
-                                <Pressable  {...props} android_ripple={null} style={[props.style, { backgroundColor: "transparent" }]}>
+                                <Pressable {...props} android_ripple={null} style={[props.style, { backgroundColor: "transparent" }]}>
                                     {props.children}
                                 </Pressable>
                             );
