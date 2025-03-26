@@ -2,13 +2,14 @@ import { Link, Redirect, useRouter } from 'expo-router';
 import React from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, ImageBackground, StatusBar, Image } from 'react-native';
 import { styles } from './styles/index.styles';
+import ThemeWrapper from '@/components/ui/ThemeWrapper';
 
 export default function Index() {
   const router = useRouter();
 
   return (
+
     <View style={styles.container}>
-      <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
       <View style={styles.content}>
         <View style={styles.headerContainer}>
           <Text style={styles.logo}>Inventra</Text>

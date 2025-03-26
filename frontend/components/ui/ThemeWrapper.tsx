@@ -4,11 +4,16 @@ import React, { useEffect } from 'react'
 import { StatusBar, View } from 'react-native'
 
 export default function ThemeWrapper({ children }: { children: React.ReactNode }) {
-    const { theme } = useThemeStore();
-
-    useEffect(()=>{
-        const setActiveColors = theme ? darkModeColors : lightModeColors;
-    },[])
+    const { theme,setActiveColors } = useThemeStore();
+    
+   useEffect(()=>{
+        if(theme){
+            setActiveColors(darkModeColors);
+        }else{
+            setActiveColors(lightModeColors);
+        }
+        
+    },[theme])
 
     return (
         <View style={{ backgroundColor: theme ? '#181818' : '#F5F5F5', flex: 1 }}>

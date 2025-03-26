@@ -1,3 +1,4 @@
+import { useThemeStore } from '@/stores/store';
 import { useClerk } from '@clerk/clerk-expo';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
@@ -6,9 +7,9 @@ import { Text, TouchableOpacity, View, Modal, Alert } from 'react-native'
 
 export default function LogOutButton() {
     const [signOutModalState, setSignOutModalState] = useState<boolean>(false);
+    const {activeColors} = useThemeStore();
     const { signOut } = useClerk();
     const router = useRouter();
-
     const handleSignOut = async () => {
         try {
             await signOut();
@@ -17,7 +18,7 @@ export default function LogOutButton() {
             console.error(JSON.stringify(err, null, 2));
         }
     };
-
+    if(!activeColors) return null
     return (
         <>
             <Modal
@@ -34,7 +35,7 @@ export default function LogOutButton() {
                     backgroundColor: 'rgba(0,0,0,0.5)' 
                 }}>
                     <View style={{
-                        backgroundColor: 'white',
+                        backgroundColor: activeColors.primaryBackground,
                         width: '90%',
                         padding: 20,
                         borderRadius: 10,
@@ -47,7 +48,8 @@ export default function LogOutButton() {
                         <Text style={{
                             textAlign: 'center',
                             marginBottom: 20,
-                            fontSize: 16
+                            fontSize: 16,
+                            color:activeColors.primaryText
                         }}>
                             Are you sure you want to log out?
                         </Text>
@@ -86,9 +88,9 @@ export default function LogOutButton() {
                 </View>
             </Modal>
 
-            <View style={{ width: "100%", flexDirection: 'row', justifyContent: 'flex-end', paddingVertical: 4 }}>
+            <View style={{ width: "100%", flexDirection: 'row', justifyContent: 'flex-end', paddingVertical: 5}}>
                 <TouchableOpacity onPress={() => setSignOutModalState(true)}>
-                    <Ionicons name="log-out-outline" size={30} color="#670000" />
+                    <Ionicons name="log-out-outline" size={35} color="#670000" />
                 </TouchableOpacity>
             </View>
         </>
