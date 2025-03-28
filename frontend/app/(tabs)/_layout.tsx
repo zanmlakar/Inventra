@@ -1,15 +1,21 @@
 import { Tabs } from 'expo-router';
-import { View, Pressable } from 'react-native';
+import { View, Pressable, Animated, TouchableWithoutFeedback } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { styles } from '@/app/(tabs)/styles/layout.style';
 import { SignedIn } from '@clerk/clerk-expo';
 import { useThemeStore } from '@/stores/store';
 import { lightModeColors } from '@/assets/colors/colors';
+import { useRef } from 'react';
 
 export default function layout() {
     const { theme, activeColors } = useThemeStore();
 
     const colors = activeColors || lightModeColors;
+
+    const rippleConfig = {
+        radius: 40,
+        color: 'rgba(255, 255, 255, 0.1)',
+    }
 
     return (
         <SignedIn>
@@ -21,15 +27,17 @@ export default function layout() {
                     tabBarStyle: {
                         borderRadius: 20,
                         marginHorizontal: 8,
+                        
+                        height: 59,
                         marginVertical: 7,
-                        borderTopWidth: 0, // Removed the top border
+                        borderTopWidth: 0,
                         backgroundColor: colors.secondaryBackground,
                     },
                     tabBarButton: (props) => {
                         return (
                             <Pressable
                                 {...props}
-                                android_ripple={null}
+                                android_ripple={rippleConfig}
                                 style={({ pressed }) => [
                                     props.style,
                                     {
@@ -37,7 +45,7 @@ export default function layout() {
                                         transform: [{ scale: pressed ? 0.97 : 1 }],
                                         height: 56,
                                         padding: 2,
-                                        borderRadius: 9999,
+                                        borderRadius: 22,
                                         justifyContent: 'center',
                                         alignItems: 'center',
                                     },
@@ -54,7 +62,7 @@ export default function layout() {
                     options={{
                         tabBarIcon: ({ color, focused }) => (
                             <View style={styles.iconContainer}>
-                                <Ionicons name={`home${!focused ? "-outline" : ""}`} size={35} color={color} />
+                                <Ionicons name={`home${!focused ? "-outline" : ""}`} size={37} color={color} />
                             </View>
                         ),
                     }}
@@ -65,7 +73,7 @@ export default function layout() {
                     options={{
                         tabBarIcon: ({ color, focused }) => (
                             <View style={styles.iconContainer}>
-                                <Ionicons name={`search${!focused ? "-outline" : ""}`} size={35} color={color} />
+                                <Ionicons name={`search${!focused ? "-outline" : ""}`} size={37} color={color} />
                             </View>
                         ),
                     }}
@@ -75,9 +83,12 @@ export default function layout() {
                     name="add"
                     options={{
                         tabBarIcon: ({ color, focused }) => (
-                            <View style={[styles.iconContainer, styles.addButton]}>
-                                <Ionicons name={`add${!focused ? "-outline" : ""}`} size={40} color="white" />
+                            <View style={{ backgroundColor: colors.secondaryBackground, borderRadius: 30, marginBottom: 24, height: 67, width: 67, justifyContent: 'center', alignItems: 'center' }}>
+                                <Animated.View style={[styles.iconContainer, styles.addButton]}>
+                                    <Ionicons name={`add${!focused ? "-outline" : ""}`} size={43} color="#d4d4d4" />
+                                </Animated.View>
                             </View>
+
                         ),
                         tabBarButton: (props) => {
                             return (
@@ -94,7 +105,7 @@ export default function layout() {
                     options={{
                         tabBarIcon: ({ color, focused }) => (
                             <View style={styles.iconContainer}>
-                                <Ionicons name={`file-tray${!focused ? "-outline" : ""}`} size={35} color={color} />
+                                <Ionicons name={`file-tray${!focused ? "-outline" : ""}`} size={37} color={color} />
                             </View>
                         ),
                     }}
@@ -105,7 +116,7 @@ export default function layout() {
                     options={{
                         tabBarIcon: ({ color, focused }) => (
                             <View style={styles.iconContainer}>
-                                <Ionicons name={`person${!focused ? "-outline" : ""}`} size={35} color={color} />
+                                <Ionicons name={`person${!focused ? "-outline" : ""}`} size={37} color={color} />
                             </View>
                         ),
                     }}

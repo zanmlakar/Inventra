@@ -9,7 +9,7 @@ export default function Settings() {
     const { user } = useUser();
     const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(true);
     const { theme, setTheme,activeColors } = useThemeStore();
-
+    
     function setDarkMode() {
         setTheme(!theme);
     }
