@@ -32,6 +32,14 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Inventra to access your camera",
+          "microphonePermission": "Allow Inventra to access your microphone",
+          "recordAudioAndroid": true
+        }
       ]
     ],  
     "experiments": {
