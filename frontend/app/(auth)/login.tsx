@@ -91,6 +91,7 @@ export default function Login() {
                                 onChangeText={setPassword}
                             />
                             <TouchableOpacity
+                                activeOpacity={0.7}
                                 style={styles.visibilityToggle}
                                 onPress={() => setIsPasswordVisible(!isPasswordVisible)}
                             >
@@ -101,17 +102,17 @@ export default function Login() {
                         </View>
                     </View>
 
-                    <TouchableOpacity style={styles.forgotPassword}>
+                    <TouchableOpacity activeOpacity={0.7} style={styles.forgotPassword}>
                         <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.loginButton} onPress={onSignInPress}>
+                    <TouchableOpacity activeOpacity={0.7} style={styles.loginButton} onPress={onSignInPress}>
                         <Text style={styles.loginButtonText}>Login</Text>
                     </TouchableOpacity>
 
                     <View style={styles.signupContainer}>
                         <Text style={styles.signupText}>Don't have an account? </Text>
-                        <TouchableOpacity onPress={navigateToRegister}>
+                        <TouchableOpacity activeOpacity={0.7} onPress={navigateToRegister}>
                             <Text style={styles.signupLink}>Sign Up</Text>
                         </TouchableOpacity>
                     </View>

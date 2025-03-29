@@ -24,7 +24,7 @@ export default function Settings() {
                     <Image source={{ uri: user?.imageUrl }} style={styles.profileImage} />
                     <Text style={[styles.username, { color: activeColors.primaryText }]}>{user?.username}</Text>
                     <Text style={[styles.email, { color: activeColors.secondaryText }]}>{user?.primaryEmailAddress?.emailAddress}</Text>
-                    <TouchableOpacity style={[styles.editProfileButton, { backgroundColor: activeColors.primary }]}>
+                    <TouchableOpacity activeOpacity={0.7} style={[styles.editProfileButton, { backgroundColor: activeColors.primary }]}>
                         <Text style={styles.editProfileText}>Edit Profile</Text>
                     </TouchableOpacity>
                 </View>

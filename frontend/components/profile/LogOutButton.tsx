@@ -59,6 +59,7 @@ export default function LogOutButton() {
                             justifyContent: 'space-between'
                         }}>
                             <TouchableOpacity
+                                activeOpacity={0.7}
                                 style={{
                                     flex: 1,
                                     backgroundColor: '#f0f0f0',
@@ -72,6 +73,7 @@ export default function LogOutButton() {
                             </TouchableOpacity>
 
                             <TouchableOpacity
+                                activeOpacity={0.7}
                                 style={{
                                     flex: 1,
                                     backgroundColor: '#670000',
@@ -89,7 +91,7 @@ export default function LogOutButton() {
             </Modal>
 
             <View style={{ width: "100%", flexDirection: 'row', justifyContent: 'flex-end', paddingVertical: 5}}>
-                <TouchableOpacity onPress={() => setSignOutModalState(true)}>
+                <TouchableOpacity activeOpacity={0.7} onPress={() => setSignOutModalState(true)}>
                     <Ionicons name="log-out-outline" size={35} color="#670000" />
                 </TouchableOpacity>
             </View>

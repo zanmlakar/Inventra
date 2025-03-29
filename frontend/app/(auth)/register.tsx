@@ -101,7 +101,7 @@ export default function Register() {
                                     onChangeText={setCode}
                                 />
                             </View>
-                            <TouchableOpacity style={styles.registerButton} onPress={onVerifyPress}>
+                            <TouchableOpacity activeOpacity={0.7} style={styles.registerButton} onPress={onVerifyPress}>
                                 <Text style={styles.registerButtonText}>Verify</Text>
                             </TouchableOpacity>
                         </View>
@@ -160,6 +160,7 @@ export default function Register() {
                                     onChangeText={setPassword}
                                 />
                                 <TouchableOpacity
+                                    activeOpacity={0.7}
                                     style={styles.visibilityToggle}
                                     onPress={() => setIsPasswordVisible(!isPasswordVisible)}
                                 >
@@ -182,6 +183,7 @@ export default function Register() {
                                     onChangeText={setConfirmPassword}
                                 />
                                 <TouchableOpacity
+                                    activeOpacity={0.7}
                                     style={styles.visibilityToggle}
                                     onPress={() => setIsConfirmPasswordVisible(!isConfirmPasswordVisible)}
                                 >
@@ -200,13 +202,13 @@ export default function Register() {
                             </Text>
                         </View>
 
-                        <TouchableOpacity style={styles.registerButton} onPress={handleRegister}>
+                        <TouchableOpacity activeOpacity={0.7} style={styles.registerButton} onPress={handleRegister}>
                             <Text style={styles.registerButtonText}>Create Account</Text>
                         </TouchableOpacity>
 
                         <View style={styles.loginContainer}>
                             <Text style={styles.loginText}>Already have an account? </Text>
-                            <TouchableOpacity onPress={navigateToLogin}>
+                            <TouchableOpacity activeOpacity={0.7} onPress={navigateToLogin}>
                                 <Text style={styles.loginLink}>Sign In</Text>
                             </TouchableOpacity>
                         </View>

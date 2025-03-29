@@ -76,7 +76,6 @@ export default function Layout() {
                         ),
                     }}
                 />
-
                 <Tabs.Screen
                     name="search"
                     options={{
@@ -87,7 +86,6 @@ export default function Layout() {
                         ),
                     }}
                 />
-
                 <Tabs.Screen
                     name="add"
                     options={{
@@ -95,6 +93,7 @@ export default function Layout() {
                             <Animated.View
                                 entering={FadeIn.duration(300)}
                                 exiting={FadeOut.duration(300)}
+
                                 style={[
                                     animatedStyle,
                                     {
