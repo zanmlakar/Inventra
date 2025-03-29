@@ -18,7 +18,7 @@ export type IColors = {
 interface ThemeStore {
     theme: boolean;
     setTheme: (newTheme: boolean) => void;
-    activeColors:IColors | null,
+    activeColors:IColors,
     setActiveColors: (newColors:IColors) => void
 }
 

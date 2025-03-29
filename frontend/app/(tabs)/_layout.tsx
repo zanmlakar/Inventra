@@ -130,7 +130,6 @@ export default function Layout() {
                         ),
                     }}
                 />
-
                 <Tabs.Screen
                     name="profile"
                     options={{

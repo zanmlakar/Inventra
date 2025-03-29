@@ -1,13 +1,13 @@
 import { Stack } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ClerkProvider, ClerkLoaded, ClerkLoading, useClerk } from '@clerk/clerk-expo'
-import { ActivityIndicator, StatusBar, StyleSheet, Text, View } from "react-native";
+import { ClerkProvider, ClerkLoaded, ClerkLoading } from '@clerk/clerk-expo'
+import { ActivityIndicator, View } from "react-native";
 import { tokenCache } from "@/cache";
 import ToastManager from "toastify-react-native";
 import { styles } from "./layout.styles";
 import ThemeWrapper from '@/components/ui/ThemeWrapper'
-import { useThemeStore } from "@/stores/store";
 import CustomStack from "@/components/CustomStack";
+
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!
 
 export default function RootLayout() {
@@ -46,9 +46,10 @@ export default function RootLayout() {
         />
         <SafeAreaView style={{ flex: 1 }}>
           <ThemeWrapper>
-           <CustomStack>
+            <CustomStack >
               <Stack.Screen name="(auth)" options={{ headerShown: false, }} />
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="addItem" options={{ headerShown: false }} />
             </CustomStack>
           </ThemeWrapper>
         </SafeAreaView>

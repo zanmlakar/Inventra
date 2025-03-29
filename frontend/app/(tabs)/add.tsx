@@ -2,9 +2,10 @@ import { darkModeColors, lightModeColors } from '@/assets/colors/colors';
 import { useThemeStore } from '@/stores/store';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { CameraView, useCameraPermissions, CameraType, CameraCapturedPicture } from 'expo-camera';
-import { useFocusEffect } from 'expo-router';
-import { useCallback, useRef, useState } from 'react';
+import { useFocusEffect, useRouter } from 'expo-router';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import * as FileSystem from 'expo-file-system';
 
 export default function App() {
   const [facing, setFacing] = useState<CameraType>('back');
@@ -12,6 +13,7 @@ export default function App() {
   const [enableTorch, setEnableTorch] = useState<boolean>(false);
   const cameraRef = useRef<CameraView | null>(null);
   const [photo, setPhoto] = useState<CameraCapturedPicture | undefined>(undefined);
+  const router = useRouter()
   const { activeColors } = useThemeStore();
 
   function toggleCameraFacing() {
@@ -25,13 +27,24 @@ export default function App() {
         base64: true,
         exif: false,
       });
-      setPhoto(photoData);
+      if (photoData) {
+        const newUri = FileSystem.documentDirectory + `photo-${Date.now()}.jpg`;
+        await FileSystem.copyAsync({
+          from: photoData.uri,
+          to: newUri
+        });
+        router.navigate({
+          pathname: "/AddItem",
+          params: { photoUri: newUri}
+        });
+      }
     }
   }
 
   useFocusEffect(
     useCallback(() => {
       return () => {
+        setPhoto(undefined);
         setEnableTorch(false);
       };
     }, [])
@@ -58,14 +71,18 @@ export default function App() {
         ref={cameraRef}
       >
       </CameraView>
+      {/* camera menu */}
       <View style={styles.controlPanel}>
+        {/* camera rotate */}
         <TouchableOpacity activeOpacity={0.7} onPress={toggleCameraFacing}>
           <Ionicons name="camera-reverse-outline" size={36} color={lightModeColors.primary} />
         </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.7} onPress={() => setEnableTorch(prev => !prev)}>
+        {/* torch button */}
+        <TouchableOpacity onPress={() => setEnableTorch(prev => !prev)}>
           <Ionicons name={`flash${!enableTorch ? '-outline' : ''}`} size={36} color={lightModeColors.primary} />
         </TouchableOpacity>
       </View>
+      {/* skip button */}
       <TouchableOpacity activeOpacity={0.7} style={[styles.skipContainer, { backgroundColor: activeColors?.primary, borderRadius: 10, flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 3 }]}>
         <Text style={{ color: "white", fontSize: 20, fontWeight: "400" }} >Skip</Text>
         <Ionicons name='arrow-forward-sharp' size={21} color="white" />
